@@ -1,0 +1,33 @@
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException, WebDriverException
+
+try:
+    # Create a new instance of the Firefox driver
+    driver = webdriver.Firefox()
+    driver.set_page_load_timeout(10)
+    # Navigate to a website
+    driver.get("http://www.example.com")
+
+    # Get the current page's status code
+    status_code = driver.execute_script("return window.status")
+
+    # Check for 40x and 50x series errors
+    if status_code >= 400 and status_code < 600:
+        if status_code >= 400 and status_code < 500:
+            print(f"4xx error (Client Error) detected with status code {status_code}")
+        else:
+            print(f"5xx error (Server Error) detected with status code {status_code}")
+    elif status_code >= 200 and status_code < 300:
+        print(f"2xx success status code detected with status code {status_code}")
+    elif status_code >= 300 and status_code < 400:
+        print(f"3xx redirection status code detected with status code {status_code}")
+    else:
+        print(f"Unrecognized status code {status_code}")
+
+except TimeoutException as e:
+    print("Timeout Exception Occured, ",e)
+except WebDriverException as e:
+    print("WebDriver Exception Occured, ",e)
+finally:
+    # Close the browser
+    driver.quit()
