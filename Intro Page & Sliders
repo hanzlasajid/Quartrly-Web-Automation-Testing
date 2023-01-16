@@ -1,0 +1,30 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+# create a new Chrome browser
+driver = webdriver.Chrome()
+
+# navigate to the signup page
+driver.get("https://www.quartrly.com/intro")
+
+# find the email field and enter the email
+email_field = driver.find_element(By.ID, "email")
+email_field.send_keys("test@example.com")
+
+# find the password field and enter the password
+password_field = driver.find_element(By.ID, "password")
+password_field.send_keys("password123")
+
+# find the signup button and click it to complete the signup process
+signup_button = driver.find_element(By.ID, "signup-button")
+signup_button.click()
+
+# verify that the user was successfully signed up by checking for an element that is present on the dashboard page
+try:
+    dashboard_header = driver.find_element(By.ID, "dashboard-header")
+    print("Signup successful!")
+except:
+    print("Signup failed!")
+
+# close the browser
+driver.quit()
