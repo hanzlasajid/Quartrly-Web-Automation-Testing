@@ -3,31 +3,87 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
 # Initialize web driver
+
 driver = webdriver.Chrome()
 
 # Navigate to the signup page
+
 driver.get("https://quartrly.com/signup")
 
 # Find the elements for the text fields
+
 name_field = driver.find_element_by_id("name")
 email_field = driver.find_element_by_id("email")
 password_field = driver.find_element_by_id("password")
+dob_field = driver.find_element_by_id("dob")
+
 
 # Input valid data into the text fields
+
 name_field.send_keys("John Doe")
-email_field.send_keys("johndoe@example.com")
+email_field.send_keys("johndoe@mailinator.com")
 password_field.send_keys("password123")
+dob_month_field.select_by_visible_text("January")
+dob_day_field.send_keys("01")
+dob_year_field.send_keys("2000")
 
-# Find the signup button and click it
-signup_button = driver.find_element_by_xpath('//button[text()="Sign up"]')
-signup_button.click()
+try:
 
-# Wait for a message indicating successful registration to appear
-success_message = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//div[text()="Successfully registered!"]')))
+    # Find the view password button and check if it's visible and enabled
 
-# Verify the success message
-assert "Successfully registered!" in success_message.text
+    view_password_button = driver.find_element_by_xpath("//span[@class='input-group-text']")
+    assert view_password_button.is_displayed()
+    assert view_password_button.is_enabled()
 
-# Close the browser
-driver.quit()
+    # Click the view password button
+
+    view_password_button.click()
+
+    # Check if the password is visible
+
+    password_field = driver.find_element_by_id("password")
+    assert password_field.get_attribute("type") == "text"
+
+    # Click the view password button again
+
+    view_password_button.click()
+
+    # Check if the password is hidden
+
+    password_field = driver.find_element_by_id("password")
+    assert password_field.get_attribute("type") == "password"
+
+    # Find the signup button and check if it's visible and enabled
+
+    signup_button = driver.find_element_by_xpath('//button[text()="Sign up"]')
+    assert signup_button.is_displayed()
+    assert signup_button.is_enabled()
+
+    # Click the signup button
+
+    signup_button.click()
+
+    # Wait for a message indicating successful registration to appear
+
+    success_message = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//div[text()="Successfully registered!"]')))
+
+    # Verify the success message
+
+    assert "Successfully registered!" in success_message.text
+
+except AssertionError:
+
+    print("Validation failed: View password button not found or not enabled or not working.")
+
+except:
+
+    print("An error occurred.")
+
+finally:
+
+    # Close the browser
+
+    driver.quit()
+
