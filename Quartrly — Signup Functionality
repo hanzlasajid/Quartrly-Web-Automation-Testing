@@ -1,0 +1,33 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+# Initialize web driver
+driver = webdriver.Chrome()
+
+# Navigate to the signup page
+driver.get("https://quartrly.com/signup")
+
+# Find the elements for the text fields
+name_field = driver.find_element_by_id("name")
+email_field = driver.find_element_by_id("email")
+password_field = driver.find_element_by_id("password")
+
+# Input valid data into the text fields
+name_field.send_keys("John Doe")
+email_field.send_keys("johndoe@example.com")
+password_field.send_keys("password123")
+
+# Find the signup button and click it
+signup_button = driver.find_element_by_xpath('//button[text()="Sign up"]')
+signup_button.click()
+
+# Wait for a message indicating successful registration to appear
+success_message = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//div[text()="Successfully registered!"]')))
+
+# Verify the success message
+assert "Successfully registered!" in success_message.text
+
+# Close the browser
+driver.quit()
